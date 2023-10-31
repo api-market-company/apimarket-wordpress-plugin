@@ -38,9 +38,10 @@ ApiMarket's plugin is developed and supported by <a target="_blank" href="https:
 The ApiMarket's plugin needs your support WordPress thrives on community. And, you are a part of community. So, we kindly request you to support ApiMarket's plugin. And, there are many ways to support, both technical and non-technical.
 
 # Installation
-1. Upload `ApiMarket` to the `/wp-content/plugins/` directory.
-2. Activate the plugin through the `Plugins` menu in WordPress.
-3. You will find ApiMarket in your WordPress admin screen.
+1. Download the [plugin](https://github.com/api-market-company/apimarket-wordpress-plugin/archive/refs/heads/main.zip).
+2. Upload `apimarket-wordpress-plugin-main.zip` to the `/wp-content/plugins/` directory.
+3. Activate the plugin through the `Plugins` menu in WordPress.
+4. You will find ApiMarket in your WordPress admin screen.
 
 # Frequently Asked Questions
 ## How many API connections can I add?
