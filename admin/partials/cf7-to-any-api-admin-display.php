@@ -1,4 +1,5 @@
 <?php
+global $apimarket_services;
 
 /**
  * Provide a admin area view for the plugin
@@ -86,85 +87,13 @@ else{
 
     <div class="cf7anyapi_field">
         <label for="cf7anyapi_base_url"><?php esc_html_e( 'ApiMarket services', 'contact-form-to-any-api' ); ?></label>
-        <select id="cf7anyapi_base_url" name="cf7anyapi_base_url" required>
-
-            <option value="https://apimarket.mx/api/renapo/grupo/obtener-curp"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/renapo/grupo/obtener-curp' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Obtain CURP using personal data', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/sat/grupo/obtener-rfc"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/sat/grupo/obtener-rfc' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Obtain RFC using CURP', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/sat/grupo/calcular-rfc"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/sat/grupo/calcular-rfc' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Calculate RFC using personal data', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/imss/grupo/localizar-umf"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/imss/grupo/localizar-umf' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Locate UMF with postal code', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/imss/grupo/localizar-nss"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/imss/grupo/localizar-nss' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Locate NSS with CURP', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/imss/grupo/consultar-vigencia"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/imss/grupo/consultar-vigencia' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Check Social Security Validity (IMSS) with NSS', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/imss/grupo/con-clinica"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/imss/grupo/con-clinica' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Consult Clinic (UMF) with CURP', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/imss/grupo/historial-laboral"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/imss/grupo/historial-laboral' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Consult the Labor History (IMSS) with NSS', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/sep/grupo/validar-cedula"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/sep/grupo/validar-cedula' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Validate Professional License (SEP)', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/sep/grupo/validar-certificado"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/sep/grupo/validar-certificado' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Validate Certificate (SEP)', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/sep/grupo/obtener-cedula"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/sep/grupo/obtener-cedula' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Obtain Professional License (SEP)', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/sat/grupo/validar-datos"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/sat/grupo/validar-datos' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Validate fiscal data (SAT) with CFDI4 (name, postal code, rfc, and tax regime)', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/infonavit/grupo/obtener-cuenta"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/infonavit/grupo/buscar-credito' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Get INFONAVIT SubAccount', 'contact-form-to-any-api' ); ?>
-            </option>
-
-            <option value="https://apimarket.mx/api/infonavit/grupo/buscar-credito"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/infonavit/grupo/buscar-credito' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Search INFONAVIT Credit with NSS', 'contact-form-to-any-api' ); ?>
-            </option>
-
-
-            <option
-                    value="https://apimarket.mx/api/renapo/grupo/valida-curp"
-                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/renapo/grupo/valida-curp' ? esc_html('selected="selected"') : ''); ?>>
-                <?php esc_html_e( 'Validate CURP and get personal data', 'contact-form-to-any-api' ); ?>
-            </option>
-
+        <select class="cf7anyapi_base_url" id="cf7anyapi_base_url" name="cf7anyapi_base_url" required>
+            <?php
+            foreach ($apimarket_services as $url => $option) {
+                $selected = $cf7anyapi_base_url == $url || $cf7anyapi_base_url == '' ? ' selected="selected"' : '';
+                echo '<option value="' . esc_attr($url) . '"' . $selected . '>' . esc_html__($option['label'], 'contact-form-to-any-api') . '</option>';
+            }
+            ?>
         </select>
     </div>
 

@@ -36,6 +36,13 @@ $apimarket_services = array(
             'curp' => '[curp]'
         )
     ],
+    'https://apimarket.mx/api/infonavit/grupo/precalificacion' => [
+        'label' => 'Get the infonavit user credit score pre approval. (nss,curp --> score, and subscores)',
+        'schema' => array(
+            'curp' => '[curp]',
+            'nss' => '[nss]'
+        )
+    ],
     'https://apimarket.mx/api/imss/grupo/historial-laboral' => [
         'label' => 'Consult the Labor History (IMSS) with NSS and CURP (nss, curp -> nombre, semanasCotizadas.semanasCotizadas, historialLaboral.movimientos[*].nombre)',
         'schema' => array(
