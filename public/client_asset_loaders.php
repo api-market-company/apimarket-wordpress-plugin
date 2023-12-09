@@ -41,6 +41,27 @@ function jvcf7p_get_data_for_client_script(){
     return $scriptData;
 }
 
+function apimarket_remote_call_post($url, $parameters) {
+    global $wp_version;
+    $url = $url . '?' . http_build_query($parameters);
+    $args = array(
+        'timeout' => 5,
+        'redirection' => 5,
+        'httpversion' => '1.0',
+        'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url(),
+        'blocking' => true,
+        'headers' => get_option('cf7_to_api_default_header'),
+        'cookies' => array(),
+        'body' => null,
+        'compress' => false,
+        'decompress' => true,
+        'sslverify' => true,
+        'stream' => false,
+        'filename' => null
+    );
+    return apimarket_remote_post($url, $args);
+}
+
 function jvcf7p_ajax_validation(){
     if(!session_id()) {session_start();}
     $method     = $_REQUEST['method'];
@@ -91,12 +112,8 @@ function jvcf7p_ajax_validation(){
             }
             break;
         case 'checkCURP':
-            global $wp_version;
-            $url = "https://apimarket.mx/api/renapo/grupo/valida-curp?curp=".$value;
-            $args = array('timeout' => 5, 'redirection' => 5, 'httpversion' => '1.0', 'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url(), 'blocking' => true, 'headers' => array(), 'cookies' => array(), 'body' => null, 'compress' => false, 'decompress' => true, 'sslverify' => true, 'stream' => false, 'filename' => null);
-            $args['headers'] = get_option('cf7_to_api_default_header');
             try {
-                $json = apimarket_remote_post($url, $args);
+                $json = apimarket_remote_call_post("https://apimarket.mx/api/renapo/grupo/valida-curp", ['curp' => $value]);
                 $return = ($json != null && isset($json['data']) && $json['data']['curp'] == $value) ? true : $GLOBALS['jvcf7p_default_error_msgs']['jvcf7p_msg_curp'];
             } catch(Exception $exception) {
                 $return = $GLOBALS['jvcf7p_default_error_msgs']['jvcf7p_msg_curp'];
@@ -203,3 +220,61 @@ function jvcf7_delete_old_custom_code(){
     $return['body'] 	= 'Old Custom Code Deleted';
     return $return;
 }
+
+function apimarket_shortcode_modal() {
+    wp_enqueue_style('my-modal-style', plugins_url('apimarket/public/css/cf7-to-any-api-modal.css'));
+    wp_enqueue_script('my-modal-script', plugins_url('apimarket/public/js/cf7-to-any-api-modal.js'), array('jquery'), null, true);
+
+    wp_localize_script('my-modal-script', 'apimarket_ajax', array(
+        'ajax_url' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('apimarket_ajax_nonce')
+    ));
+    ob_start();
+    ?>
+    <div id="apimarket-modal" class="apimarket-modal">
+        <div class="apimarket-modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Vista Previa</h2>
+            <table id="apimarket-pretty-table"></table>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+
+add_shortcode('apimarket_preview_modal', 'apimarket_shortcode_modal');
+
+
+function apimarket_ajax_handler() {
+    check_ajax_referer('apimarket_ajax_nonce', 'nonce');
+    parse_str($_POST['form'], $form_data);
+
+    $cf7anyapi_object = new Cf7_To_Any_Api();
+    try {
+        $wpcf7_id = (int) $form_data['_wpcf7'];
+        $cf7anyapi_options = $cf7anyapi_object->Cf7_To_Any_Api_get_options($cf7anyapi_object->find_apimarket_service_from_cf7($wpcf7_id));
+        unset($form_data['_wpcf7']);
+        unset($form_data['_wpcf7_version']);
+        unset($form_data['_wpcf7_unit_tag']);
+        unset($form_data['_wpcf7_container_post']);
+        unset($form_data['_wpcf7_posted_data_hash']);
+        unset($form_data['_wpnonce']);
+        $response = apimarket_remote_call_post($cf7anyapi_options['cf7anyapi_base_url'], $form_data)['data'];
+        $keys = array_keys($response);
+        $visible_keys = array_slice($keys, 0, 3);
+        foreach ($response as $key => $value) {
+            if (!in_array($key, $visible_keys)) {
+                $response[$key] = "Disponible hasta recepción del correo.";
+            }
+        }
+        wp_send_json_success($response);
+    } catch (Exception $exception) {
+        wp_send_json_success(['error' => $exception->getMessage()]);
+    }
+
+
+    wp_die();
+}
+
+add_action('wp_ajax_nopriv_apimarket_ajax_handler', 'apimarket_ajax_handler');
+add_action('wp_ajax_apimarket_ajax_handler', 'apimarket_ajax_handler');

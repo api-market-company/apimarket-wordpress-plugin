@@ -87,7 +87,7 @@ class Cf7_To_Any_Api_Admin
     public static function cf7anyapi_update_settings($cf7_to_any_api_id, $cf7_to_any_api)
     {
         if ($cf7_to_any_api->post_type == 'cf7_to_any_api') {
-            $status = 'false';
+            #var_dump($cf7_to_any_api->post_type);
             if (isset($_POST['cf7_to_any_api_cpt_nonce']) && wp_verify_nonce($_POST['cf7_to_any_api_cpt_nonce'], 'cf7_to_any_api_cpt_nonce')) {
 
                 $options['cf7anyapi_selected_form'] = (int)stripslashes($_POST['cf7anyapi_selected_form']);
@@ -481,6 +481,56 @@ class Cf7_To_Any_Api_Admin
         }
     }
 
+    /*
+     *
+     * @since    2.5.0
+     */
+    public function cf7_to_any_api_manage_from_cf7_panel($panels)
+    {
+        $new_page = array(
+            'Integration' => array(
+                'title' => 'ApiMarket',
+                'callback' =>  array ($this, 'load_cf7_panel')
+            )
+        );
+        return array_merge($panels, $new_page);
+    }
+
+    public function load_cf7_panel($cf7_form)
+    {
+        $_POST['contact_form7_form_id']  = $cf7_form->id();
+        include dirname(__FILE__) . '/partials/cf7-to-any-api-admin-cf7-panel.php';
+    }
+
+    public function wpcf7_after_create($contact_form)
+    {
+        global $apimarket_services;
+        $_POST['cf7anyapi_selected_form'] = (string)$contact_form->id;
+        $schema = $apimarket_services[$_POST['cf7anyapi_base_url']]['schema'];
+        $_POST['cf7anyapi_json_format'] = json_encode($schema);
+        wp_insert_post(array(
+            'post_title'    => 'form-'.$contact_form->title(),
+            'post_status'   => 'publish',
+            'post_type'     => 'cf7_to_any_api'
+        ));
+    }
+
+    public function wpcf7_after_update($contact_form)
+    {
+        if (!empty($_POST['cf7anyapi_id'])) {
+            $_POST['cf7anyapi_selected_form'] = (string)$contact_form->id;
+            wp_update_post(array(
+                'ID' => (int)$_POST['cf7anyapi_id'],
+                'post_title'    => $_POST['cf7anyapi_title'],
+                'post_status'   => 'publish',
+                'post_type'     => 'cf7_to_any_api'
+            ));
+        } else {
+            $this->wpcf7_after_create($contact_form);
+        }
+
+    }
+
     /**
      * Register the Custom Post Type
      *
@@ -491,7 +541,11 @@ class Cf7_To_Any_Api_Admin
         $supports = array('title', // Custom Post Type Title
         );
         $labels = array('name' => _x('CF7 to API', 'plural', 'contact-form-to-any-api'), 'singular_name' => _x('apimarket', 'singular', 'contact-form-to-any-api'), 'menu_name' => _x('ApiMarket', 'admin menu', 'contact-form-to-any-api'), 'name_admin_bar' => _x('CF7 to Any API', 'admin bar', 'contact-form-to-any-api'), 'add_new' => _x('Add New CF7 API', 'add new', 'contact-form-to-any-api'), 'add_new_item' => __('Add New CF7 API', 'contact-form-to-any-api'), 'new_item' => __('New CF7 API', 'contact-form-to-any-api'), 'edit_item' => __('Edit CF7 API', 'contact-form-to-any-api'), 'view_item' => __('View CF7 API', 'contact-form-to-any-api'), 'all_items' => __('All CF7 API', 'contact-form-to-any-api'), 'not_found' => __('No CF7 API found.', 'contact-form-to-any-api'), 'register_meta_box_cb' => 'aps_metabox',);
-        $args = array('supports' => $supports, 'labels' => $labels, 'hierarchical' => false, 'public' => false,  // it's not public, it shouldn't have it's own permalink, and so on
+        $args = array(
+            'supports' => $supports,
+            'labels' => $labels,
+            'hierarchical' => false,
+            'public' => false,  // it's not public, it shouldn't have it's own permalink, and so on
             'publicly_queryable' => false,  // you should be able to query it
             'show_ui' => true,  // you should be able to edit it in wp-admin
             'exclude_from_search' => true,  // you should exclude it from search results

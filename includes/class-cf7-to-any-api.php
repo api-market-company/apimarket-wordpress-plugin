@@ -176,7 +176,7 @@ class Cf7_To_Any_Api {
 		$this->loader->add_action('save_post',$plugin_admin,'cf7anyapi_update_settings',10,2);
 		$this->loader->add_action('wp_ajax_cf7_to_any_api_get_form_field',$plugin_admin,'cf7_to_any_api_get_form_field_function');
 		$this->loader->add_action('wp_ajax_cf7_to_any_api_bulk_log_delete',$plugin_admin,'cf7_to_any_api_bulk_log_delete_function');
-		if($api_mail_hook['cf7_to_api_before_mail_sent'] == true){
+		if($api_mail_hook['cf7_to_api_before_mail_sent']){
 			$cf7_filter_hook = 'wpcf7_before_send_mail';
 		}else{
 			$cf7_filter_hook = 'wpcf7_mail_sent';
@@ -194,6 +194,11 @@ class Cf7_To_Any_Api {
 
         $this->loader->add_action( 'admin_post_save_cf7_to_any_api_update_settings',$plugin_admin,'cf7_to_any_api_update_settings');
 
+        $this->loader->add_action('wpcf7_editor_panels', $plugin_admin, 'cf7_to_any_api_manage_from_cf7_panel', 3 );
+
+        $this->loader->add_action('wpcf7_after_create', $plugin_admin, 'wpcf7_after_create', 3);
+
+        $this->loader->add_action('wpcf7_after_update', $plugin_admin, 'wpcf7_after_update', 3);
 
 	}
 
@@ -205,7 +210,7 @@ class Cf7_To_Any_Api {
 	 * @access   private
 	 */
 	private function define_public_hooks() {
-        add_filter( 'wpcf7_verify_nonce', '__return_true' );
+        add_filter('wpcf7_verify_nonce', '__return_true' );
         add_action('wp_enqueue_scripts', 'jvcf7p_client_assets', 20);
         add_action('wp_ajax_nopriv_jvcf7p_ajax_validation', 'jvcf7p_ajax_validation');
         add_action('wp_ajax_jvcf7p_ajax_validation', 'jvcf7p_ajax_validation');
@@ -252,26 +257,84 @@ class Cf7_To_Any_Api {
 		return $this->version;
 	}
 
+    public function find_apimarket_service_from_cf7($cf7_form_id)
+    {
+        $args = array(
+            'post_type' => 'cf7_to_any_api',
+            'post_status' => 'publish',
+            'posts_per_page' => 1,
+            'meta_query' => array('relation' => 'AND', array('key' => 'cf7anyapi_selected_form', 'value' => $cf7_form_id, 'compare' => '=',),),
+        );
+        $related_posts = get_posts($args);
+        if (!empty($related_posts)) {
+            return $related_posts[0];
+        }
+       return null;
+    }
+
+    /*
+   *
+   * @since    2.5.0
+   */
+    public function cf7_to_any_api_manage_from_cf7_panel($panels)
+    {
+        $new_page = array(
+            'Integration' => array(
+                'title' => 'ApiMarket',
+                'callback' =>  array ($this, 'load_cf7_panel')
+            )
+        );
+        return array_merge($panels, $new_page);
+    }
+
+    public function load_cf7_panel($cf7_form)
+    {
+        $_POST['contact_form7_form_id'] = $cf7_form->id();
+        include dirname(__FILE__) . '/partials/cf7-to-any-api-admin-cf7-panel.php';
+    }
+
+    public function wpcf7_after_create($contact_form)
+    {
+        $_POST['cf7anyapi_selected_form'] = (string)$contact_form->id;
+        $_POST['cf7anyapi_json_format'] = json_encode(['curp' => '[curp]']);
+        wp_insert_post(array(
+            'post_title'    => 'form-'.$contact_form->title().'-curp',
+            'post_status'   => 'publish',
+            'post_type'     => 'cf7_to_any_api'
+        ));
+    }
+
+    public function wpcf7_after_update($contact_form)
+    {
+        $_POST['cf7anyapi_selected_form'] = (string)$contact_form->id;
+        wp_update_post(array(
+            'post_title'    => 'form-'.$contact_form->title().'-curp',
+            'post_status'   => 'publish',
+            'post_type'     => 'cf7_to_any_api'
+        ));
+    }
+
 	/**
 	 * Retrieve the all current Post API data
 	 *
 	 * @since     1.0.0
 	 * @return    string
 	 */
-	public function Cf7_To_Any_Api_get_options() {
-		global $post;
+	public function Cf7_To_Any_Api_get_options($apimarket_post) {
 		$options = [];
 		$field_array = array();
-		$options['cf7anyapi_selected_form'] = get_post_meta($post->ID,'cf7anyapi_selected_form',true);
-		$options['cf7anyapi_base_url'] = get_post_meta($post->ID,'cf7anyapi_base_url',true);
-		$options['cf7anyapi_basic_auth'] = get_post_meta($post->ID,'cf7anyapi_basic_auth',true);
-		$options['cf7anyapi_bearer_auth'] = get_post_meta($post->ID,'cf7anyapi_bearer_auth',true);
-		$options['cf7anyapi_input_type'] = get_post_meta($post->ID,'cf7anyapi_input_type',true);
-		$options['cf7anyapi_method'] = get_post_meta($post->ID,'cf7anyapi_method',true);
+        $options['cf7anyapi_id'] = $apimarket_post->ID;
+        $options['cf7anyapi_title']  = $apimarket_post->post_title;
+		$options['cf7anyapi_selected_form'] = get_post_meta($apimarket_post->ID,'cf7anyapi_selected_form',true);
+		$options['cf7anyapi_base_url'] = get_post_meta($apimarket_post->ID,'cf7anyapi_base_url',true);
+		$options['cf7anyapi_basic_auth'] = get_post_meta($apimarket_post->ID,'cf7anyapi_basic_auth',true);
+		$options['cf7anyapi_bearer_auth'] = get_post_meta($apimarket_post->ID,'cf7anyapi_bearer_auth',true);
+		$options['cf7anyapi_input_type'] = get_post_meta($apimarket_post->ID,'cf7anyapi_input_type',true);
+		$options['cf7anyapi_method'] = get_post_meta($apimarket_post->ID,'cf7anyapi_method',true);
 		// Text Area Primium Version
 		//$options['cf7anyapi_form_field'] = get_post_meta($post->ID,'cf7anyapi_form_field',true);
-		$options['cf7anyapi_json_format'] = get_post_meta($post->ID,'cf7anyapi_json_format',true);
-		$options['cf7anyapi_header_request'] = get_post_meta($post->ID,'cf7anyapi_header_request',true);
+		$options['cf7anyapi_json_format'] = get_post_meta($apimarket_post->ID,'cf7anyapi_json_format',true);
+		$options['cf7anyapi_header_request'] = get_post_meta($apimarket_post->ID,'cf7anyapi_header_request',true);
 		if(!empty($options['cf7anyapi_selected_form'])){
 			$ContactForm = WPCF7_ContactForm::get_instance($options['cf7anyapi_selected_form']);
 			$form_fields = $ContactForm->scan_form_tags();

@@ -13,7 +13,8 @@
  */
 
 $cf7anyapi_object = new Cf7_To_Any_Api();
-$cf7anyapi_options = $cf7anyapi_object->Cf7_To_Any_Api_get_options();
+global $post;
+$cf7anyapi_options = $cf7anyapi_object->Cf7_To_Any_Api_get_options($post);
 
 $selected_form = (empty($cf7anyapi_options['cf7anyapi_selected_form']) ? '' : $cf7anyapi_options['cf7anyapi_selected_form']);
 $cf7anyapi_base_url = (empty($cf7anyapi_options['cf7anyapi_base_url']) ? 'https://apimarket.mx/api/renapo/grupo/valida-curp' : $cf7anyapi_options['cf7anyapi_base_url']);
@@ -147,10 +148,16 @@ else{
                 <?php esc_html_e( 'Validate fiscal data (SAT) with CFDI4 (name, postal code, rfc, and tax regime)', 'contact-form-to-any-api' ); ?>
             </option>
 
+            <option value="https://apimarket.mx/api/infonavit/grupo/obtener-cuenta"
+                <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/infonavit/grupo/buscar-credito' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
+                <?php esc_html_e( 'Get INFONAVIT SubAccount', 'contact-form-to-any-api' ); ?>
+            </option>
+
             <option value="https://apimarket.mx/api/infonavit/grupo/buscar-credito"
                 <?php echo ($cf7anyapi_base_url == 'https://apimarket.mx/api/infonavit/grupo/buscar-credito' || $cf7anyapi_base_url == '' ? esc_html('selected="selected"') : ''); ?>>
                 <?php esc_html_e( 'Search INFONAVIT Credit with NSS', 'contact-form-to-any-api' ); ?>
             </option>
+
 
             <option
                     value="https://apimarket.mx/api/renapo/grupo/valida-curp"

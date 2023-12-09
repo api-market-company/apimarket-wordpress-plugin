@@ -16,7 +16,7 @@
  * Plugin Name:       ApiMarket
  * Plugin URI:        https://apimarket.mx/
  * Description:       Send CF7 Data to ApiMarket's endpoints.
- * Version:           1.7.1
+ * Version:           2.0.0
  * Author:            ApiMarket
  * Author URI:        https://apimarket.mx/
  * License:           GPL-2.0+
@@ -59,6 +59,8 @@ register_activation_hook( __FILE__, 'activate_apimarket' );
  * admin-specific hooks, and public-facing site hooks.
  */
 require plugin_dir_path( __FILE__ ) . 'includes/class-cf7-to-any-api.php';
+
+require plugin_dir_path(__FILE__) . 'includes/apimarket_services.php';
 
 
 /**
