@@ -87,7 +87,6 @@ class Cf7_To_Any_Api_Admin
     public static function cf7anyapi_update_settings($cf7_to_any_api_id, $cf7_to_any_api)
     {
         if ($cf7_to_any_api->post_type == 'cf7_to_any_api') {
-            #var_dump($cf7_to_any_api->post_type);
             if (isset($_POST['cf7_to_any_api_cpt_nonce']) && wp_verify_nonce($_POST['cf7_to_any_api_cpt_nonce'], 'cf7_to_any_api_cpt_nonce')) {
 
                 $options['cf7anyapi_selected_form'] = (int)stripslashes($_POST['cf7anyapi_selected_form']);

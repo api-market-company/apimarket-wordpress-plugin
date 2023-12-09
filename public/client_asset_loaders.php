@@ -247,13 +247,12 @@ add_shortcode('apimarket_preview_modal', 'apimarket_shortcode_modal');
 
 function apimarket_ajax_handler() {
     check_ajax_referer('apimarket_ajax_nonce', 'nonce');
-    parse_str($_POST['form'], $form_data);
     try {
-        $wpcf7_id = (int) $form_data['_wpcf7'];
-        $cf7anyapi_options =  Cf7_To_Any_Api_Admin::create_request($wpcf7_id, $form_data);
-        var_dump($cf7anyapi_options['body']);
+        parse_str($_POST['form'], $form_data);
         if (WPCF7_RECAPTCHA::get_instance()->verify($form_data['_wpcf7_recaptcha_response']))
             wp_send_json_error(['error' => "You're bot."]);
+        $wpcf7_id = (int) $form_data['_wpcf7'];
+        $cf7anyapi_options =  Cf7_To_Any_Api_Admin::create_request($wpcf7_id, $form_data);
         if ($cf7anyapi_options['body'] == "\"\"")
             wp_send_json_error(['error' => "The request doesn't have valid data."]);
         $request =  json_decode($cf7anyapi_options['body']);
