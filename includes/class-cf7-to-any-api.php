@@ -331,8 +331,6 @@ class Cf7_To_Any_Api {
 		$options['cf7anyapi_bearer_auth'] = get_post_meta($apimarket_post->ID,'cf7anyapi_bearer_auth',true);
 		$options['cf7anyapi_input_type'] = get_post_meta($apimarket_post->ID,'cf7anyapi_input_type',true);
 		$options['cf7anyapi_method'] = get_post_meta($apimarket_post->ID,'cf7anyapi_method',true);
-		// Text Area Primium Version
-		//$options['cf7anyapi_form_field'] = get_post_meta($post->ID,'cf7anyapi_form_field',true);
 		$options['cf7anyapi_json_format'] = get_post_meta($apimarket_post->ID,'cf7anyapi_json_format',true);
 		$options['cf7anyapi_header_request'] = get_post_meta($apimarket_post->ID,'cf7anyapi_header_request',true);
 		if(!empty($options['cf7anyapi_selected_form'])){

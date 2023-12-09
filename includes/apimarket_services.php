@@ -27,13 +27,13 @@ $apimarket_services = array(
     'https://apimarket.mx/api/imss/grupo/consultar-vigencia' => [
         'label' => 'Check Social Security Validity (IMSS) with NSS',
         'schema' => array(
-            'curp' => '[curp]'
+            'nss' => '[nss]'
         )
     ],
     'https://apimarket.mx/api/imss/grupo/con-clinica' => [
-        'label' => 'Consult Clinic (UMF) with CURP',
+        'label' => 'Consult Clinic (UMF) with nss',
         'schema' => array(
-            'curp' => '[curp]'
+            'nss' => '[nss]'
         )
     ],
     'https://apimarket.mx/api/infonavit/grupo/precalificacion' => [
@@ -46,7 +46,8 @@ $apimarket_services = array(
     'https://apimarket.mx/api/imss/grupo/historial-laboral' => [
         'label' => 'Consult the Labor History (IMSS) with NSS and CURP (nss, curp -> nombre, semanasCotizadas.semanasCotizadas, historialLaboral.movimientos[*].nombre)',
         'schema' => array(
-            'curp' => '[curp]'
+            'curp' => '[curp]',
+            'nss' => '[nss]'
         )
     ],
     'https://apimarket.mx/api/sat/grupo/validar-datos' => [
@@ -58,7 +59,7 @@ $apimarket_services = array(
     'https://apimarket.mx/api/infonavit/grupo/obtener-cuenta' => [
         'label' => 'Get INFONAVIT SubAccount (nss -> subaccount)',
         'schema' => array(
-            'curp' => '[curp]'
+            'nss' => '[nss]'
         )
     ],
     'https://apimarket.mx/api/infonavit/grupo/buscar-credito' => [

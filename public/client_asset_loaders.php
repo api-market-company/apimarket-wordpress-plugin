@@ -47,7 +47,7 @@ function apimarket_remote_call_post($url, $parameters) {
     $args = array(
         'timeout' => 5,
         'redirection' => 5,
-        'httpversion' => '1.0',
+        'httpversion' => '2',
         'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url(),
         'blocking' => true,
         'headers' => get_option('cf7_to_api_default_header'),
@@ -248,18 +248,16 @@ add_shortcode('apimarket_preview_modal', 'apimarket_shortcode_modal');
 function apimarket_ajax_handler() {
     check_ajax_referer('apimarket_ajax_nonce', 'nonce');
     parse_str($_POST['form'], $form_data);
-
-    $cf7anyapi_object = new Cf7_To_Any_Api();
     try {
         $wpcf7_id = (int) $form_data['_wpcf7'];
-        $cf7anyapi_options = $cf7anyapi_object->Cf7_To_Any_Api_get_options($cf7anyapi_object->find_apimarket_service_from_cf7($wpcf7_id));
-        unset($form_data['_wpcf7']);
-        unset($form_data['_wpcf7_version']);
-        unset($form_data['_wpcf7_unit_tag']);
-        unset($form_data['_wpcf7_container_post']);
-        unset($form_data['_wpcf7_posted_data_hash']);
-        unset($form_data['_wpnonce']);
-        $response = apimarket_remote_call_post($cf7anyapi_options['cf7anyapi_base_url'], $form_data)['data'];
+        $cf7anyapi_options =  Cf7_To_Any_Api_Admin::create_request($wpcf7_id, $form_data);
+        var_dump($cf7anyapi_options['body']);
+        if (WPCF7_RECAPTCHA::get_instance()->verify($form_data['_wpcf7_recaptcha_response']))
+            wp_send_json_error(['error' => "You're bot."]);
+        if ($cf7anyapi_options['body'] == "\"\"")
+            wp_send_json_error(['error' => "The request doesn't have valid data."]);
+        $request =  json_decode($cf7anyapi_options['body']);
+        $response = apimarket_remote_call_post($cf7anyapi_options['cf7anyapi_base_url'], $request)['data'];
         $keys = array_keys($response);
         $visible_keys = array_slice($keys, 0, 3);
         foreach ($response as $key => $value) {
@@ -269,10 +267,8 @@ function apimarket_ajax_handler() {
         }
         wp_send_json_success($response);
     } catch (Exception $exception) {
-        wp_send_json_success(['error' => $exception->getMessage()]);
+        wp_send_json_error(['error' => $exception->getMessage()]);
     }
-
-
     wp_die();
 }
 

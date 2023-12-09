@@ -32,7 +32,6 @@ $cf7anyapi_json_format = (empty($cf7anyapi_options['cf7anyapi_json_format']) ? '
 <input type="hidden" name="cf7anyapi_header_request" value="<?php echo $cf7anyapi_header_request; ?>">
 <input type="hidden" name="cf7anyapi_title" value="<?php echo $cf7anyapi_title; ?>">
 
-
 <div class="cf7anyapi_field">
     <?php wp_nonce_field('cf7_to_any_api_cpt_nonce','cf7_to_any_api_cpt_nonce' ); ?>
     <label for="cf7anyapi_base_url"><?php esc_html_e( 'ApiMarket services', 'contact-form-to-any-api' ); ?></label>

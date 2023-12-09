@@ -242,13 +242,7 @@ class Cf7_To_Any_Api_Admin
 
                 $cf7anyapi_header_request = get_post_meta(get_the_ID(), 'cf7anyapi_header_request', true);
 
-                foreach ($posted_data as $key => $value) {
-                    if (is_array($value)) {
-                        $cf7anyapi_json_format = str_replace('[' . $key . ']', implode(',', $value), $cf7anyapi_json_format);
-                    } else {
-                        $cf7anyapi_json_format = str_replace('[' . $key . ']', $value, $cf7anyapi_json_format);
-                    }
-                }
+                $cf7anyapi_json_format = self::fit_json_format($posted_data, $cf7anyapi_json_format);
 
                 $response = self::cf7anyapi_send_lead($cf7anyapi_json_format, $cf7anyapi_base_url, $cf7anyapi_input_type, $cf7anyapi_method, $form_id, get_the_ID(), $cf7anyapi_basic_auth, $cf7anyapi_bearer_auth, $cf7anyapi_header_request, $posted_data);
 
@@ -354,6 +348,15 @@ class Cf7_To_Any_Api_Admin
         }
     }
 
+    public static function create_request($wpcf7_id, $data): array|string
+    {
+        $cf7anyapi_object = new Cf7_To_Any_Api();
+        $cf7anyapi_options = $cf7anyapi_object->Cf7_To_Any_Api_get_options($cf7anyapi_object->find_apimarket_service_from_cf7($wpcf7_id));
+        $json = json_encode($cf7anyapi_options['cf7anyapi_json_format']);
+        $cf7anyapi_options['body'] = self::fit_json_format($data, $json);
+        return $cf7anyapi_options;
+    }
+
     /**
      * Form Data convert into JSON formate
      *
@@ -408,6 +411,23 @@ class Cf7_To_Any_Api_Admin
             echo json_encode(array('status' => -1, 'Message' => 'Failed'));
         }
         exit();
+    }
+
+    /**
+     * @param mixed $posted_data
+     * @param string $cf7anyapi_json_format
+     * @return array
+     */
+    public static function fit_json_format($posted_data, $cf7anyapi_json_format)
+    {
+        foreach ($posted_data as $key => $value) {
+            if (is_array($value)) {
+                $cf7anyapi_json_format = str_replace('[' . $key . ']', implode(',', $value), $cf7anyapi_json_format);
+            } else {
+                $cf7anyapi_json_format = str_replace('[' . $key . ']', $value, $cf7anyapi_json_format);
+            }
+        }
+        return $cf7anyapi_json_format;
     }
 
     /**
@@ -504,10 +524,7 @@ class Cf7_To_Any_Api_Admin
 
     public function wpcf7_after_create($contact_form)
     {
-        global $apimarket_services;
-        $_POST['cf7anyapi_selected_form'] = (string)$contact_form->id;
-        $schema = $apimarket_services[$_POST['cf7anyapi_base_url']]['schema'];
-        $_POST['cf7anyapi_json_format'] = json_encode($schema);
+       $this->prepare_form_for_upsert($contact_form);
         wp_insert_post(array(
             'post_title'    => 'form-'.$contact_form->title(),
             'post_status'   => 'publish',
@@ -515,20 +532,26 @@ class Cf7_To_Any_Api_Admin
         ));
     }
 
+    public function prepare_form_for_upsert($contact_form) {
+        global $apimarket_services;
+        $_POST['cf7anyapi_selected_form'] = (string)$contact_form->id;
+        $schema = $apimarket_services[$_POST['cf7anyapi_base_url']]['schema'];
+        $_POST['cf7anyapi_json_format'] = json_encode($schema);
+    }
+
     public function wpcf7_after_update($contact_form)
     {
-        if (!empty($_POST['cf7anyapi_id'])) {
-            $_POST['cf7anyapi_selected_form'] = (string)$contact_form->id;
-            wp_update_post(array(
-                'ID' => (int)$_POST['cf7anyapi_id'],
-                'post_title'    => $_POST['cf7anyapi_title'],
-                'post_status'   => 'publish',
-                'post_type'     => 'cf7_to_any_api'
-            ));
-        } else {
+        if (empty($_POST['cf7anyapi_id'])) {
             $this->wpcf7_after_create($contact_form);
+            return;
         }
-
+        $this->prepare_form_for_upsert($contact_form);
+        wp_update_post(array(
+            'ID' => (int)$_POST['cf7anyapi_id'],
+            'post_title'    => $_POST['cf7anyapi_title'],
+            'post_status'   => 'publish',
+            'post_type'     => 'cf7_to_any_api'
+        ));
     }
 
     /**

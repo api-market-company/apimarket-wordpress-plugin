@@ -6,7 +6,7 @@
 #apimarket-modal {
     display: none;
     z-index: 1;
-    position: absolute;
+    position: fixed;
     left: 50%;
     top: 50%;
     margin-left: -150px;
