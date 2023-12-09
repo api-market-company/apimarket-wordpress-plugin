@@ -348,7 +348,7 @@ class Cf7_To_Any_Api_Admin
         }
     }
 
-    public static function create_request($wpcf7_id, $data): array|string
+    public static function create_request($wpcf7_id, $data)
     {
         $cf7anyapi_object = new Cf7_To_Any_Api();
         $cf7anyapi_options = $cf7anyapi_object->Cf7_To_Any_Api_get_options($cf7anyapi_object->find_apimarket_service_from_cf7($wpcf7_id));
