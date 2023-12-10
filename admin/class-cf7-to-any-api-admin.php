@@ -420,10 +420,11 @@ class Cf7_To_Any_Api_Admin
     public static function fit_json_format($posted_data, $cf7anyapi_json_format)
     {
         foreach ($posted_data as $key => $value) {
+            $key = '[' . strtolower($key) . ']';
             if (is_array($value)) {
-                $cf7anyapi_json_format = str_replace('[' . $key . ']', implode(',', $value), $cf7anyapi_json_format);
+                $cf7anyapi_json_format = str_replace($key, implode(',', $value), $cf7anyapi_json_format);
             } else {
-                $cf7anyapi_json_format = str_replace('[' . $key . ']', $value, $cf7anyapi_json_format);
+                $cf7anyapi_json_format = str_replace($key, $value, $cf7anyapi_json_format);
             }
         }
         return $cf7anyapi_json_format;

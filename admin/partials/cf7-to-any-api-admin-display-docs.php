@@ -9,7 +9,7 @@
         <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true"><?php esc_html_e( 'How to configure', 'contact-form-to-any-api' ); ?></a>
         <a class="nav-link" id="v-pills-logs-tab" data-toggle="pill" href="#v-pills-logs" role="tab" aria-controls="v-pills-logs" aria-selected="false"><?php esc_html_e( 'Logs', 'contact-form-to-any-api' ); ?></a>
         <a class="nav-link" id="v-pills-entries-tab" data-toggle="pill" href="#v-pills-entries" role="tab" aria-controls="v-pills-entries" aria-selected="false"><?php esc_html_e( 'Entries', 'contact-form-to-any-api' ); ?></a>
-        <a class="nav-link" id="v-pills-json-format-tab" data-toggle="pill" href="#v-pills-json-format" role="tab" aria-controls="v-pills-json-format" aria-selected="false"><?php esc_html_e( 'Supported JSON Format', 'contact-form-to-any-api' ); ?></a>
+        <a class="nav-link" id="v-pills-validation-preview-tab" data-toggle="pill" href="#v-pills-validation-preview" role="tab" aria-controls="v-pills-validation-preview" aria-selected="false"><?php esc_html_e( 'Validation and Preview', 'contact-form-to-any-api' ); ?></a>
         <a class="nav-link" id="v-pills-cf7-hidden-field-tab" data-toggle="pill" href="#v-pills-cf7-hidden-field" role="tab" aria-controls="v-pills-cf7-hidden-field" aria-selected="false"><?php esc_html_e( 'CF7 Hidden Fields', 'contact-form-to-any-api' ); ?></a>
         <a class="nav-link" id="v-pills-contact-us-tab" data-toggle="pill" href="#v-pills-contact-us" role="tab" aria-controls="v-pills-contact-us" aria-selected="false"><?php esc_html_e( 'Contact Us', 'contact-form-to-any-api' ); ?></a>
         </div>
@@ -24,7 +24,7 @@
                 <li><?php esc_html_e( 'Please select a form which you would like to connect with API', 'contact-form-to-any-api' ); ?></li>
                 <li><?php esc_html_e( 'Enter your API URL', 'contact-form-to-any-api' ); ?></li>
                 <li><?php esc_html_e( 'Add header request like below', 'contact-form-to-any-api' ); ?></li>
-                
+
             <code>
         <pre>
     Authorization: MY_API_KEY
@@ -76,42 +76,14 @@
             
         </div>
 
-        <!-- Supported JSON Format -->
-        <div class="tab-pane fade cf7anyapi_full_width" id="v-pills-json-format" role="tabpanel" aria-labelledby="v-pills-json-format-tab">
-        <h5>Supported JSON format</h5>
-            <ol>
-                <li><b>Supported JSON format by API MARKET</b></br>
-                <code>
-            <pre>
-    {
-        Firstname : "your-first-name",
-        Lastname : "your-last-name",
-        Email : "your-email",
-        Phone : "your-phone"
-    }
-            </pre>
-                </code>
-                    </li>
-
-                    <li><b>Unsupported JSON Format</b></br>
-                    <code>
-            <pre>
-    {
-        Firstname : "your-first-name",
-        Lastname : "your-last-name",
-        Email : "your-email",
-        Phone : { 
-                   office-number :  "9898989898", 
-                   helpline-number :  "1800-125-125"
-                }
-    }
-            </pre>
-                </code>
-
-
-                </li>
-            </ol>
+        <!-- Validation and client preview -->
+        <div class="tab-pane fade cf7anyapi_full_width" id="v-pills-validation-preview" role="tabpanel" aria-labelledby="v-pills-validation-preview">
+            <h5>Client validation</h5>
+            When you need to validate NSS, CURP, or RFC, simply add the respective CSS classes 'nss', 'curp', and 'rfc'. This action will enable typical client-side validation for these formats. Additionally, we offer other utility CSS validation tools for phone numbers, regular expressions (labeled as 'RegEx-Expression'), and email verification (identified as 'emailVerify').
+            <h5>AJAX preview</h5>
+            You can create a preview using the shortcut [apimarket_preview_modal]. It provides you with the AJAX code and a modal to show a preview of the answer.
         </div>
+
         <!-- CF7 Hidden field -->
          <div class="tab-pane fade cf7anyapi_full_width" id="v-pills-cf7-hidden-field" role="tabpanel" aria-labelledby="v-pills-cf7-hidden-field">
             <h5><?php esc_html_e( 'How to use CF7 Hidden fields', 'contact-form-to-any-api' ); ?></h5><br>

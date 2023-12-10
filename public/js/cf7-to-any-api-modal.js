@@ -6,40 +6,52 @@ function camelCaseToTitleCase(str) {
     return str.replace(/\b\w/g, function(l){ return l.toUpperCase() });
 }
 
-jQuery(document).ready(function($) {
+function call_apimarket_service(success, error) {
+    $.ajax({
+        url: apimarket_ajax.ajax_url,
+        type: 'post',
+        data: {
+            action: 'apimarket_ajax_handler',
+            nonce: apimarket_ajax.nonce,
+            form: form.serialize()
+        },
+        dataType   : 'json',
+        success,
+        error
+    });
+}
 
-    $('#preview').on('click', function(event) {
+function async_apimarket_service() {
+    return new Promise((resolve, reject) => call_apimarket_service(resolve, reject));
+}
+
+jQuery(document).ready(function($) {
+    const apimarket_spinner = '#apimarket-modal-spinner';
+    const apimarket_modal = '#apimarket-modal';
+
+    $('#apimarket-modal-preview').on('click', function(event) {
         event.preventDefault();
-        var form = $(this).closest('form');
+        const form = $(this).closest('form');
         form.validate();
         if (!form.valid())
             return;
-        $('#apimarket-modal').show();
+        $(apimarket_modal).show();
+        $(apimarket_spinner).css("visibility", "visible");
         const $table = $("#apimarket-pretty-table");
+        $(apimarket_spinner).css("visibility", "hidden");
         $table.empty();
-        $.ajax({
-            url: apimarket_ajax.ajax_url,
-            type: 'post',
-            data: {
-                action: 'apimarket_ajax_handler',
-                nonce: apimarket_ajax.nonce,
-                form: form.serialize()
-            },
-            dataType   : 'json',
-            success: function(response) {
-                Object.entries(
-                    response.data
-                ).forEach(([key, value]) => {
-                    const row = "<tr><th>" + camelCaseToTitleCase(key) + "</th><td>" + value + "</td></tr>";
-                    $table.append(row);
-                });
-            }
-        });
+        call_apimarket_service(() => {
+            Object.entries(
+                response.data
+            ).forEach(([key, value]) => {
+                const row = "<tr><th>" + camelCaseToTitleCase(key) + "</th><td>" + value + "</td></tr>";
+                $table.append(row);
+            });
+        }, () => $(apimarket_spinner).css("visibility", "hidden"))
     });
 
-    // Close the Modal
     $('.close-modal').on('click', function() {
-        $('#apimarket-modal').hide();
+        $(apimarket_modal).hide();
     });
 
 

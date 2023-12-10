@@ -25,9 +25,10 @@ $apimarket_services = array(
         )
     ],
     'https://apimarket.mx/api/imss/grupo/consultar-vigencia' => [
-        'label' => 'Check Social Security Validity (IMSS) with NSS',
+        'label' => 'Check Social Security Validity (IMSS) with NSS and CURP (nss,curp -> nombre, vigencia, fechaVigencia)',
         'schema' => array(
-            'nss' => '[nss]'
+            'nss' => '[nss]',
+            'curp' => '[curp]'
         )
     ],
     'https://apimarket.mx/api/imss/grupo/con-clinica' => [
@@ -36,8 +37,8 @@ $apimarket_services = array(
             'nss' => '[nss]'
         )
     ],
-    'https://apimarket.mx/api/infonavit/grupo/precalificacion' => [
-        'label' => 'Get the infonavit user credit score pre approval. (nss,curp --> score, and subscores)',
+    'https://apimarket.mx/api/infonavit/grupo/credit' => [
+        'label' => 'Get the infonavit user credit (nss,curp --> score, and subscores)',
         'schema' => array(
             'curp' => '[curp]',
             'nss' => '[nss]'

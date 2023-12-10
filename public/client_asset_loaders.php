@@ -234,7 +234,7 @@ function apimarket_shortcode_modal() {
     <div id="apimarket-modal" class="apimarket-modal">
         <div class="apimarket-modal-content">
             <span class="close-modal">&times;</span>
-            <h2>Vista Previa</h2>
+            <h2>Vista Previa <span id="apimarket-modal-spinner" class="wpcf7-spinner"></span> </h2>
             <table id="apimarket-pretty-table"></table>
         </div>
     </div>
