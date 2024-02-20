@@ -57,6 +57,7 @@ Certainly, this software is free. Please contact us at <a href="mailto:abdiel@ap
 
 ## 2.0.0
 * You can add new services which are external to API Market.
+* Add Lista 69B SAT.
 
 ## 1.7.0
 * It supports Profile builder.
