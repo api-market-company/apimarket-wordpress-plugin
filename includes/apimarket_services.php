@@ -89,4 +89,11 @@ $apimarket_services = array(
         'label' => 'Obtain Professional License (SEP)',
         'schema' => []
     ],
+    'https://apimarket.mx/api/sat/v2/lista69b' => [
+        'label' => 'Lista 69B SAT',
+        'schema' => array(
+            'select' => 'rfc',
+            'rfc' => '[rfc]'
+        )
+    ],
 );

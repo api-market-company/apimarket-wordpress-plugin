@@ -55,6 +55,12 @@ Certainly, this software is free. Please contact us at <a href="mailto:abdiel@ap
 
 # Changelog
 
+## 2.0.0
+* You can add new services which are external to API Market.
+
+## 1.7.0
+* It supports Profile builder.
+
 ## 1.6.4
 * Configure as the plugin work using Settings menu.
 

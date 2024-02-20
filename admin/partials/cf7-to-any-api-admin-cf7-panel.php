@@ -34,13 +34,15 @@ $cf7anyapi_json_format = (empty($cf7anyapi_options['cf7anyapi_json_format']) ? '
 
 <div class="cf7anyapi_field">
     <?php wp_nonce_field('cf7_to_any_api_cpt_nonce','cf7_to_any_api_cpt_nonce' ); ?>
-    <label for="cf7anyapi_base_url"><?php esc_html_e( 'ApiMarket services', 'contact-form-to-any-api' ); ?></label>
-    <select class="cf7anyapi_base_url" id="cf7anyapi_base_url" name="cf7anyapi_base_url" required>
+    <label for="cf7anyapi_base_url"><?php esc_html_e( 'ApiMarket services', 'contact-form-to-any-api' ); ?>
+        <input list="list_apimarket_services" class="cf7anyapi_base_url" id="cf7anyapi_base_url" name="cf7anyapi_base_url" required/>
+    </label>
+    <datalist id="list_apimarket_services">
         <?php
-          foreach ($apimarket_services as $url => $option) {
-             $selected = $cf7anyapi_base_url == $url || $cf7anyapi_base_url == '' ? ' selected="selected"' : '';
+        foreach ($apimarket_services as $url => $option) {
+            $selected = $cf7anyapi_base_url == $url || $cf7anyapi_base_url == '' ? ' selected="selected"' : '';
             echo '<option value="' . esc_attr($url) . '"' . $selected . '>' . esc_html__($option['label'], 'contact-form-to-any-api') . '</option>';
-          }
+        }
         ?>
-    </select>
+    </datalist>
 </div>
