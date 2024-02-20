@@ -51,7 +51,7 @@ Unlimited, there is no limit of creation of API you can send data to any of our 
 Once you activate the plugin you will find documentation link.
 
 ## Can I Customize this Plugin?
-Absolutely. Please Connect with us on <a href="mailto:abdiel@apimarket.mx">abdiel@apimarket.mx</a>
+Certainly, this software is free. Please contact us at <a href="mailto:abdiel@apimarket.mx">abdiel@apimarket.mx</a> if you need assistance.
 
 # Changelog
 
