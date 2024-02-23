@@ -86,9 +86,8 @@ else{
     </div>
 
     <div class="cf7anyapi_field">
-        <label for="cf7anyapi_base_url"><?php esc_html_e( 'ApiMarket services', 'contact-form-to-any-api' ); ?>
-            <input list="list_apimarket_services" class="cf7anyapi_base_url" id="cf7anyapi_base_url" name="cf7anyapi_base_url" required/>
-        </label>
+        <label for="cf7anyapi_base_url"><?php esc_html_e( 'ApiMarket services', 'contact-form-to-any-api' ); ?> </label>
+        <input  list="list_apimarket_services" type="text" id="cf7anyapi_base_url" name="cf7anyapi_base_url" placeholder="<?php esc_attr_e("https://apimarket.mx/api/renapo/grupo/valida-curp"); ?>" value="<?php echo esc_url($cf7anyapi_base_url); ?>" placeholder="<?php esc_attr_e( 'Enter Your API URL', 'contact-form-to-any-api' ); ?>" required>
         <datalist id="list_apimarket_services">
             <?php
             foreach ($apimarket_services as $url => $option) {
